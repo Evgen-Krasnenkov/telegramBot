@@ -5,6 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -12,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+@Component
 public class SuperBot extends TelegramLongPollingBot {
 
     private static final String WHAT_TIME_IS_IT = "What time is it?";
@@ -22,15 +27,22 @@ public class SuperBot extends TelegramLongPollingBot {
     public static final String POKER = "Poker";
     public static final String FOOL = "Fool";
     public static final String SEEK_HIDE = "Seek & Hide";
+    public static final String WHAT_LIKE = "What do you like?";
+
+    @Value("${token.bot}")
+    public String token;
+
+    @Value("${bot.name}")
+    public String botName;
 
     @Override
     public String getBotUsername() {
-        return "clmTeamBot";
+        return this.botName;
     }
 
     @Override
     public String getBotToken() {
-        return "2137351575:AAFxVw3AjFuDGGLAh0iOqy1k_u5fLQpj29c";
+        return token;
     }
 
     @SneakyThrows
@@ -88,7 +100,7 @@ public class SuperBot extends TelegramLongPollingBot {
 
     private SendMessage getOrderGame(Message message) {
         SendMessage response = new SendMessage();
-        response.setText("What do you like?");
+        response.setText(WHAT_LIKE);
         response.setReplyMarkup(getGameMenu());
         response.setChatId(String.valueOf(message.getChatId()));
         return  response;
